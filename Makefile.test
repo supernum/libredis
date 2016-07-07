@@ -1,0 +1,18 @@
+include ./MAKEFILE
+
+TESTNAME = test
+
+INC = -I./
+#MODULE += ./libredis.so
+MODULE += ./libredis.a
+OBJ = test.o
+
+$(TESTNAME): $(OBJ)
+	$(CC) -o $@ $^ $(MODULE)
+	
+%.o : %.c
+	$(CC) -c $< $(INC)
+
+.PHONY:clean
+clean:
+	rm -f $(OBJ) $(TESTNAME)

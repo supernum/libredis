@@ -1,0 +1,41 @@
+ostype = $(shell sh -c 'uname -s 2>/dev/null || echo not')
+CFLAGS = -DDEBUG
+
+ifeq ($(ostype), SunOS)
+	CFLAGS += -DSUNOS
+	CC = cc $(CFLAGS)
+	SHARED_FLAG = -G -fpic
+	LIBC = -lCrun -lCstd
+	LIBSOCKET = -lresolv  -lsocket  -lnsl
+	LD = -ldl
+	DYLIBSUFFIX=so
+	STLIBSUFFIX=a
+endif
+
+ifeq ($(ostype), AIX)
+	CFLAGS += -DAIX
+	CC=xlC -g $(CFLAGS)
+	SHARED_FLAG = -G -brtl
+	DYLIBSUFFIX=so
+	STLIBSUFFIX=a
+endif
+
+ifeq (${ostype}, HP-UX)
+	CFLAGS += -DHPUX
+	CC=aCC +Z -Wl,+s +u4 -ext -mt -w -AA +z -O +W67,829,749 -D_GNUC_STL_ -D_LARGEFILE64_SOURCE -D_THREAD_SAFE $(CFLAGS)
+	SHARED_FLAG = +DD64 -w -AA -b
+	DYLIBSUFFIX=sl
+	STLIBSUFFIX=a
+endif
+
+ifeq ($(ostype), Linux)
+	CFLAGS += -DLINUX -O0
+	CC = gcc -std=c99 -m64 -g -Wall -W $(CFLAGS)
+	SHARED_FLAG = -fPIC -shared
+	LIBC =
+	LIBSOCKET =
+	LD = -ldl
+	DYLIBSUFFIX=so
+	STLIBSUFFIX=a
+endif
+
