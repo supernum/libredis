@@ -660,10 +660,6 @@ int redis_exec_command(redis_context *c, redis_reader *r) {
     return _redis_exec_command(c, r);
 }
 
-int redis_exec_command2(redis_context *c, redis_reader *r) {
-    return _redis_exec_command(c, r);
-}
-
 int _redis_get_return_number(redis_reader *r) {
     size_t i, len, rows = 0;
     long strlen, multi = -1;
